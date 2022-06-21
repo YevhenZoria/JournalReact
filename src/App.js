@@ -1,50 +1,33 @@
-import React, { useState } from "react";
-import ClassCounter from "./components/ClassCounter";
+import React, { useRef, useState } from "react";
 import Counter from "./components/Counter";
 import './styles/App.css';
 import CallItem from './components/CallItem'
 import CallList from "./components/CallList";
-import MyButton from "./components/UI/button/MyButton";
-import MyInput from "./components/UI/Input/MyInput";
+import CallForm from "./components/CallForm";
 
 function App() {
-  const [callsTP, setCallsTP] = useState([
-    { id: 1, Problem: 'Перша проблема на традиційному процесі', Remedy: 'Рішення' },
-    { id: 2, Problem: 'Друга проблема на традиційному процесі', Remedy: 'Рішення' },
-    { id: 3, Problem: 'Третя проблема на традиційному процесі', Remedy: 'Рішення' },
-    { id: 4, Problem: 'Четверта проблема на традиційному процесі', Remedy: 'Рішення' },
-    { id: 5, Problem: "П'ята проблема на традиційному процесі", Remedy: 'Рішення' },
-    { id: 6, Problem: 'Шоста проблема на традиційному процесі', Remedy: 'Рішення' },
-  ])
-  const [callsMP, setCallsMP] = useState([
-    { id: 1, Problem: 'Перша проблема на сучасному процесі', Remedy: 'Рішення' },
-    { id: 2, Problem: 'Друга проблема на сучасному процесі', Remedy: 'Рішення' },
-    { id: 3, Problem: 'Третя проблема на сучасному процесі', Remedy: 'Рішення' },
-    { id: 4, Problem: 'Четверта проблема на сучасному процесі', Remedy: 'Рішення' },
-    { id: 5, Problem: "П'ята проблема на сучасному процесі", Remedy: 'Рішення' },
-    { id: 6, Problem: 'Шоста проблема на сучасному процесі', Remedy: 'Рішення' },
+  const [calls, setCalls] = useState([
+    { id: 1, problem: 'Перша проблема на традиційному процесі', remedy: 'Рішення' },
+    { id: 2, problem: 'Друга проблема на традиційному процесі', remedy: 'Рішення' },
+    { id: 3, problem: 'Третя проблема на традиційному процесі', remedy: 'Рішення' },
+    { id: 4, problem: 'Четверта проблема на традиційному процесі', remedy: 'Рішення' },
+    { id: 5, problem: "П'ята проблема на традиційному процесі", remedy: 'Рішення' },
+    { id: 6, problem: 'Шоста проблема на традиційному процесі', remedy: 'Рішення' },
   ])
 
-  const [problem, setProblem] = useState('')
+  const createCall = (newCall) => {
+    setCalls([...calls, newCall])
+  }
 
-  const addNewCall = (e) => {
-    e.preventDefault()
-    console.log(problem)
+  const removeCall = (call) => {
+    setCalls(calls.filter(c => c.id !== call.id))
+    console.log(call)
   }
 
   return (
     <div className="App">
-      <form>
-        <MyInput
-          value={problem}
-          onChange = {e => setProblem(e.target.value)} 
-          type="text" 
-          placeholder="Опис проблеми" />
-        <MyInput type="text" placeholder="Метод вирішення" />
-        <MyButton onClick={addNewCall}>Створити виклик!</MyButton>
-      </form>
-      <CallList calls={callsTP} title="Перелік викликів ТРАДИЦІЙНИЙ ПРОЦЕС" />
-      <CallList calls={callsMP} title="Перелік викликів СУЧАСНИЙ ПРОЦЕС" />
+      <CallForm create={createCall} />
+      <CallList remove = {removeCall} calls={calls} title="Перелік викликів ТРАДИЦІЙНИЙ ПРОЦЕС" />
 
 
     </div>

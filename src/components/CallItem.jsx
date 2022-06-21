@@ -1,4 +1,5 @@
 import React from 'react'
+import MyButton from "./UI/button/MyButton";
 
 const CallItem = (props) => {
 
@@ -6,13 +7,15 @@ const CallItem = (props) => {
     <div className="call">
       <div className="call__content">
 
-        <strong>{props.call.id}. {props.call.Problem}  </strong>
+        <strong>{props.number}. {props.call.problem}  </strong>
         <div>
-          {props.call.Remedy}
+          {props.call.remedy}
         </div>
-      </div>
+      </div>      
       <div className="call_btns">
-        <button>Delete</button>
+        <MyButton onClick={()=>props.remove(props.call)}>
+          Delete
+          </MyButton> 
       </div>
     </div>
   )
