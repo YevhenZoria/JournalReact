@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Counter from "./components/Counter";
 import './styles/App.css';
 import CallItem from './components/CallItem'
@@ -11,28 +11,38 @@ import AddCallModal from "./components/MyModal/AddCallModal";
 import MyButton from "./components/UI/button/MyButton";
 import { useCalls } from "./hooks/useCalls";
 
+import CallService from "./API/CallService";
+
 function App() {
-  const [calls, setCalls] = useState([
-    { id: 1, problem: 'Перша проблема на традиційному процесі', remedy: '1Рішення' },
-    { id: 2, problem: 'Друга проблема на традиційному процесі', remedy: '2Рішення' },
-    { id: 3, problem: 'Третя проблема на традиційному процесі', remedy: '3Рішення' },
-    { id: 4, problem: 'Четверта проблема на традиційному процесі', remedy: '4Рішення' },
-    { id: 5, problem: "П'ята проблема на традиційному процесі", remedy: 'я Рішення' },
-    { id: 6, problem: 'Шоста проблема на традиційному процесі', remedy: '0 Рішення' },
-  ])
 
+  useEffect(() => {
+    fetchCalls()
+  }, [])
 
+  const [calls, setCalls] = useState([])
   const [filter, setFilter] = useState({ sort: '', query: '' })
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = useCalls(calls, filter.sort, filter.query);
+  const [isCallsLoading, setIsCallsLoading] = useState(false);
 
 
 
+  async function fetchCalls() {
+    setIsCallsLoading(true)
+    setTimeout(async () => {
+      const calls = await CallService.getAll();
+      setCalls(calls)
+      setIsCallsLoading(false);
+    }, 1000);
+
+  }
 
   const createCall = (newCall) => {
     setCalls([...calls, newCall])
     setModal(false)
   }
+
+
 
   const removeCall = (call) => {
     setCalls(calls.filter(c => c.id !== call.id))
@@ -41,6 +51,7 @@ function App() {
 
   return (
     <div className="App">
+      <button onClick={fetchCalls}>Data</button>
       <MyButton style={{ marginTop: 30 }} onClick={() => setModal(true)}>
         Додати виклик</MyButton>
       <AddCallModal visible={modal} setVisible={setModal}>
@@ -52,7 +63,13 @@ function App() {
         filter={filter}
         setFilter={setFilter}
       />
-      <CallList remove={removeCall} calls={sortedAndSearchedPosts} title="Перелік викликів ТРАДИЦІЙНИЙ ПРОЦЕС" />
+      {isCallsLoading
+        ? <h1>ЗАВАНТАЖЕННЯ.....</h1>
+        : <CallList remove={removeCall} calls={sortedAndSearchedPosts} title="Перелік викликів ТРАДИЦІЙНИЙ ПРОЦЕС" />
+      }
+
+
+
     </div>
   );
 }

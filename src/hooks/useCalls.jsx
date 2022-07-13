@@ -15,10 +15,12 @@ export const useSortedCalls = (calls, sort) =>{
 
 
 export const useCalls = (calls, sort, query) =>{
+  
     const sortedCalls = useSortedCalls(calls, sort)
     
     const sortedAndSearchedPosts = useMemo(() => {
-        return sortedCalls.filter(post => post.problem.toLowerCase().includes(query.toLowerCase()))
+      console.log('ОТРАБОТАЛА ФУНКЦИЯ getSortedANDSearchedCalls')
+      return sortedCalls.filter(post => post.problem.toLowerCase().includes(query.toLowerCase()))
       }, [query, sortedCalls])
     
 
